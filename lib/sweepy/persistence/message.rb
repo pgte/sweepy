@@ -37,13 +37,21 @@ module Sweepy
         success = @db.delete(key)
         handle_db_error unless success || (@valid_delete_errors.include?(@db.ecode))
       end
+      
+      def iterinit
+        @db.iterinit
+      end
+      
+      def iternext
+        @db.iternext
+      end
 
       protected
       
       private
       
       def _handle_db_error
-        puts @db.errmsg(@db.ecode) 
+        $stderr.puts @db.errmsg(@db.ecode) 
       end
       
     end

@@ -38,7 +38,7 @@ module Sweepy
           #@db.put(ip, line)
           #close_connection if data =~ /quit/i
         rescue => exception
-          puts "Error processing protocol line: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}"
+          $stderr.puts "Error processing protocol line: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}"
         end
       end
       
