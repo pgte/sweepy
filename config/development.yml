@@ -5,9 +5,12 @@ servers:
   public:
     bind_address: 0.0.0.0
     port: 10001
+  private:
+    port: 10002
 sweeping:
   base_dir: /home/pgte/dev/sweepy
   # allowed_paths match is done using File.fnmatch expressions: http://www.ruby-doc.org/core/classes/File.html#M002519
   allowed_paths: [dev, dev/*]
 persistence:
   persist: true
+  peers: [192.168.2.100, 192.168.2.101]

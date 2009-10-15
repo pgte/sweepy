@@ -10,9 +10,11 @@ module Sweepy
       
           def command(arguments, source)
             puts "SWEEP command received from #{source}"
-            arguments.each do |path|
+            nonce = arguments[0] 
+            arguments[1..-1].each do |path|
               _sweep(path, source)
             end
+            send_to(source, "SWEPT #{nonce}")
           end
           
           private
@@ -25,7 +27,6 @@ module Sweepy
               allowed = true
               if allowed_paths = Sweepy.config['sweeping']['allowed_paths']
                 allowed = false
-                puts 'going through allows_paths'
                 allowed_paths.each do |allowed_path|
                   if File.fnmatch(File.join(base_dir, allowed_path), path)
                     allowed = true

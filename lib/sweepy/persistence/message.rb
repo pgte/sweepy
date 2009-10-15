@@ -35,6 +35,7 @@ module Sweepy
       end
 
       def put(key, value)
+        puts "put(#{key}, #{value})"
         @db.put(key, value) || _handle_db_error 
       end
 
