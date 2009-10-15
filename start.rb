@@ -18,6 +18,7 @@ if Sweepy.config['persistence']['persist']
 end
 
 ## Start public server
+begin
 EM.run { 
   begin
     puts "Starting public server on #{Sweepy.config['servers']['public']['bind_address']}:#{Sweepy.config['servers']['public']['port']}"
@@ -31,3 +32,7 @@ EM.run {
     exit
   end
 }
+ensure
+  puts "closing the DM"
+  $PM.disconnect
+end

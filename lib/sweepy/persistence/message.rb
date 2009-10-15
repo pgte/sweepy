@@ -5,16 +5,10 @@ module Sweepy
      require 'tokyocabinet'
      include TokyoCabinet
       
-      def db
-        if !@db
-          
-        end
-        
-      end
-      
       def initialize(db_path)
         @db_path = db_path
         @valid_get_errors = [TokyoCabinet::HDB::ESUCCESS, TokyoCabinet::HDB::ENOREC]
+        @valid_delete_errors = [TokyoCabinet::HDB::ENOREC]
         puts "DB path = #{db_path}"
       end
       
@@ -37,6 +31,11 @@ module Sweepy
       def put(key, value)
         puts "put(#{key}, #{value})"
         @db.put(key, value) || _handle_db_error 
+      end
+      
+      def delete(key)
+        success = @db.delete(key)
+        handle_db_error unless success || (@valid_delete_errors.include?(@db.ecode))
       end
 
       protected

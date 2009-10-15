@@ -22,7 +22,7 @@ module Sweepy
             if Sweepy.config['persistence']['persist']
               Sweepy.config['persistence']['peers'].each do |peer|
                 if peer != Sweepy::Persistence::SelfPublicAddress.get
-                  $PM.put("#{nonce}-#{peer}", "SWEEP #{paths.join(" ")}")
+                  $PM.put("#{nonce}-#{peer}", "#{Time.now.utc.to_i} SWEEP #{paths.join(" ")}")
                 end
               end
             end
