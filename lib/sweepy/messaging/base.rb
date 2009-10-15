@@ -12,10 +12,6 @@ module Sweepy
       def post_init
         @command_listeners = {}
 
-        # Start message persistence database
-        #@db = Sweepy::Persistence::Message.new('db.tch')
-        #@db.connect
-        
         sweepy_post_init
         
       end

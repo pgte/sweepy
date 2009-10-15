@@ -7,6 +7,14 @@ require 'lib/sweepy/messaging/public'
 
 puts "Configuration:\n#{Sweepy.config.inspect}"
 
+## Start persistence
+
+if Sweepy.config['persistence']['persist']
+  require 'lib/sweepy/persistence/message'
+  $PM = Sweepy::Persistence::Message.new('db.tch')
+  $PM.connect
+end
+
 ## Start public server
 EM.run { 
   begin
