@@ -1,0 +1,11 @@
+servers:
+  broadcast:
+    bind_address: 192.168.2.255
+    port: 10000
+  public:
+    bind_address: 0.0.0.0
+    port: 10001
+sweeping:
+  base_dir: /home/pgte/dev/sweepy
+  # match is done using File.fnmatch expressions: http://www.ruby-doc.org/core/classes/File.html#M002519
+  allowed_paths: [dev, dev/*]
