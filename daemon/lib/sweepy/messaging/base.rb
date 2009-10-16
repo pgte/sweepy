@@ -43,10 +43,10 @@ module Sweepy
       end
       
       def send_message(to, command, arguments = [])
-        data = "#{command} #{arguments.join(" ")}"
+        data = "#{command} #{arguments.join(" ")}\n"
         port = Sweepy.config['servers'][to.nil? ? 'broadcast' : 'public']['port']
         to = Sweepy.config['servers']['broadcast']['bind_address'] if to.nil?
-        puts "send_datagram(#{data}, #{to}, #{port})"
+        #puts "send_datagram(#{data}, #{to}, #{port})"
         send_datagram(data, to, port)
       end
 

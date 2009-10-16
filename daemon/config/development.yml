@@ -13,7 +13,7 @@ sweeping:
   allowed_paths: [dev, dev/*]
 persistence:
   persist: true
-  peers: [192.168.2.100, 192.168.2.101]
+  peers: [192.168.2.100]
   retry_after_secs: 10 
   # the amount of time the retries will try to send this message 
   timeout_secs: 1000

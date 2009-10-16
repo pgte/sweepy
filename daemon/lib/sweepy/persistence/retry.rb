@@ -6,7 +6,6 @@ module Sweepy
     class Retry < Sweepy::Protocol::Listener
     
       def retry
-        puts "#"
         $PM.iterinit
         while key = $PM.iternext
           _process_message(key)
@@ -31,8 +30,10 @@ module Sweepy
               puts "Message \"#{key}\" expired. Deleting it" 
               $PM.delete(key)
             else
-              #resend message  
-              send_to(dest, message[1..-1].join(' '))
+              #resend message
+              command = message[1..-1].join(' ')
+              puts "retrying to send \"#{command}\" to #{dest}"   
+              send_to(dest, command)
             end
           end
         end

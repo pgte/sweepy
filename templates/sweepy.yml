@@ -1,0 +1,8 @@
+development:
+  daemon:
+    private:
+      port: 10002
+production:
+  daemon:
+    private:
+      port: 10002
