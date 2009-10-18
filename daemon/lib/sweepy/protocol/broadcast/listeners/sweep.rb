@@ -9,6 +9,7 @@ module Sweepy
           end
       
           def command(arguments, source)
+            $STATS.sweeps_incr
             puts "SWEEP command received from #{source}"
             nonce = arguments[0]
             type = arguments[1]
@@ -36,6 +37,7 @@ module Sweepy
           private
 
           def _sweep_fragment_regexp(path, regexp_options, source)
+            $STATS.sweep_fragments_incr
             puts "_sweep_fragment_regexp(#{path.inspect}, #{regexp_options.inspect}, #{source})"
             base_dir = File.expand_path(Sweepy.config['sweeping']['fragments']['base_dir'])
             puts "base_dir: #{base_dir}"
@@ -54,6 +56,7 @@ module Sweepy
           end
 
           def _sweep_fragment(path, source)
+            $STATS.sweep_fragments_incr
             puts "_sweep_fragment(#{path.inspect}, #{source})"
             base_dir = File.expand_path(Sweepy.config['sweeping']['fragments']['base_dir'])
             path = File.expand_path(File.join(base_dir, path), base_dir)
@@ -70,6 +73,7 @@ module Sweepy
           end
 
           def _sweep_page(path, source)
+            $STATS.sweep_pages_incr
             puts "_sweep_page(#{path.inspect}, #{source})"
             base_dir = File.expand_path(Sweepy.config['sweeping']['pages']['base_dir'])
             path = File.expand_path(File.join(base_dir, path), base_dir)

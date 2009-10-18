@@ -9,6 +9,7 @@ module Sweepy
           end
       
           def command(arguments, source)
+            $STATS.swepts_incr
             puts "SWEPT command received from #{source}"
             if Sweepy.config['persistence']['persist']
               nonce = arguments[0]

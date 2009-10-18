@@ -24,6 +24,14 @@ module Sweepy
         #@messenger.send_datagram("#{command} #{arguments.join(" ")}", to, Sweepy.config[to.nil? ? 'broadcast' : 'public']['port'])        
       end
       
+      def send_data(data)
+        @messenger.send_data(data)
+      end
+      
+      def close_connection_after_writing
+        @messenger.close_connection_after_writing
+      end
+      
       
     end
   end

@@ -7,6 +7,9 @@ servers:
     port: 10001
   private:
     port: 10002
+  admin:
+    bind_address: 0.0.0.0
+    port: 10003
 sweeping:
   pages:
    base_dir: /home/pgte/dev/sweepytest
