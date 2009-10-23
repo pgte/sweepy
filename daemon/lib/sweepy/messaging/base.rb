@@ -22,9 +22,9 @@ module Sweepy
 
       def receive_line line
         begin
-          #p "line: #{line}"
+          p "line: #{line}"
           port, ip = Socket.unpack_sockaddr_in(get_peername)
-          #p "from #{ip}"
+          p "from #{ip}"
 
           tokens = line.split(" ")
           command = tokens.first
@@ -37,7 +37,7 @@ module Sweepy
           #@db.put(ip, line)
           #close_connection if data =~ /quit/i
         rescue => exception
-          send_data exception.message+"\n"
+          send_data "ERROR: #{exception.message}\n"
           $stderr.puts "Error processing protocol line: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}\n"
         end
       end
@@ -46,11 +46,23 @@ module Sweepy
         data = "#{command} #{arguments.join(" ")}\n"
         port = Sweepy.config['servers'][to.nil? ? 'broadcast' : 'public']['port']
         to = Sweepy.config['servers']['broadcast']['bind_address'] if to.nil?
-        #puts "send_datagram(#{data}, #{to}, #{port})"
-        send_datagram(data, to, port)
+        _send_datagram(data, to, port)
       end
+      
 
       protected
+      
+      def _send_datagram(data, to, port)
+        sock = UDPSocket.open
+        begin
+          port = Integer(port)
+          sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+          sock.send(data, 0, to, port)
+          puts "_send_datagram(#{data}, #{to}, #{port})"
+        ensure
+          sock.close if sock
+        end
+      end
       
       def register_listeners(base_path, module_name)
          puts "Checking for listeners on #{base_path}"
