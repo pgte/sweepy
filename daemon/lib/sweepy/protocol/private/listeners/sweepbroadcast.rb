@@ -20,14 +20,15 @@ module Sweepy
           
           def _sweepbroadcast(paths)
             nonce = _nonce
+            sweep_command = "SWEEP #{nonce} #{paths.join(" ")}"
             if Sweepy.config['persistence']['persist']
               Sweepy.config['persistence']['peers'].each do |peer|
                 if peer != Sweepy::Persistence::SelfPublicAddress.get
-                  $PM.put("#{nonce}-#{peer}", "#{Time.now.utc.to_i} SWEEP #{paths.join(" ")}")
+                  $PM.put("#{nonce}-#{peer}", "#{Time.now.utc.to_i} #{sweep_command}")
                 end
               end
             end
-            send_to nil, "SWEEP #{nonce} #{paths.join(" ")}"
+            send_to nil, sweep_command
           end
           
           def _nonce

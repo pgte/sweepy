@@ -56,7 +56,7 @@ module Sweepy
         sock = UDPSocket.open
         begin
           port = Integer(port)
-          sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+          sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true) if port == Sweepy.config['servers']['broadcast']['port'] 
           sock.send(data, 0, to, port)
           puts "_send_datagram(#{data}, #{to}, #{port})"
         ensure

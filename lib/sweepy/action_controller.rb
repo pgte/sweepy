@@ -17,7 +17,7 @@ module Sweepy
       def expire_page_with_sweepy(path)
         logger.debug("SWEEPY: expire_page_with_sweepy(#{path})")
         Sweepy::Commander.sweep_page_broadcast(path)
-        expire_page_without_sweepy(path)
+        #expire_page_without_sweepy(path)
       end
     end
     
@@ -27,7 +27,7 @@ module Sweepy
         key = key.is_a?(Regexp) ? key : fragment_cache_key(key)
         logger.debug("SWEEPY: expire_fragment_with_sweepy(#{key.inspect}, #{options.inspect})")
         Sweepy::Commander.sweep_fragment_broadcast(key)
-        expire_fragment_without_sweepy(key, options)
+        #expire_fragment_without_sweepy(key, options)
       end
 
     end
