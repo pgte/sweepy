@@ -12,26 +12,29 @@ module Sweepy
             $STATS.sweeps_incr
             puts "SWEEP command received from #{source}"
             nonce = arguments[0]
-            type = arguments[1]
-            path_start_on_index = 2
-            regexp_options = nil
-            if type == 'FRAGMENT_REGEXP'
-              regexp_options = Integer(arguments[2])
-              path_start_on_index = 3
-            end
-            arguments[path_start_on_index..-1].each do |path|
-              case type
-                when 'PAGE'
-                  _sweep_page(path, source)
-                when 'FRAGMENT_REGEXP'
-                  _sweep_fragment_regexp(path, regexp_options, source)
-                when 'FRAGMENT_STRING'
-                  _sweep_fragment(path, source)
-                else
-                  raise "Unknown sweep command type #{type}"
+            begin
+              type = arguments[1]
+              path_start_on_index = 2
+              regexp_options = nil
+              if type == 'FRAGMENT_REGEXP'
+                regexp_options = Integer(arguments[2])
+                path_start_on_index = 3
               end
+              arguments[path_start_on_index..-1].each do |path|
+                case type
+                  when 'PAGE'
+                    _sweep_page(path, source)
+                  when 'FRAGMENT_REGEXP'
+                    _sweep_fragment_regexp(path, regexp_options, source)
+                  when 'FRAGMENT_STRING'
+                    _sweep_fragment(path, source)
+                  else
+                    raise "Unknown sweep command type #{type}"
+                end
+              end
+            ensure
+              send_to(source, "SWEPT #{nonce}")
             end
-            send_to(source, "SWEPT #{nonce}")
           end
           
           private
