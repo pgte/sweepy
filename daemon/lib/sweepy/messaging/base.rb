@@ -2,7 +2,6 @@ require 'rubygems'
 require 'eventmachine'
 require 'socket'
 
-require 'lib/sweepy/persistence/message'
 require 'lib/sweepy/protocol/listener'
 
 module Sweepy

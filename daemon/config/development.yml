@@ -1,6 +1,6 @@
 servers:
   broadcast:
-    bind_address: 192.168.2.255
+    bind_address: 192.168.1.255
     port: 10000
   public:
     bind_address: 0.0.0.0
@@ -20,7 +20,7 @@ sweeping:
   
 persistence:
   persist: true
-  peers: [192.168.2.100]
+  peers: [192.168.1.100, 192.168.1.101]
   retry_after_secs: 10 
   # the amount of time the retries will try to send this message 
   timeout_secs: 1000
