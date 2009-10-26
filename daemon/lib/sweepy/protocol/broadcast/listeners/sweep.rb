@@ -1,3 +1,5 @@
+require 'uri'
+
 module Sweepy
   module Protocol
     module Broadcast
@@ -64,7 +66,7 @@ module Sweepy
             path = File.expand_path(File.join(base_dir, path), base_dir)
             if (path =~ /#{base_dir}/) == 0
               begin
-                File.delete(path) if File              
+                File.delete(fragment_real_file_path(path)) if File              
               rescue SystemCallError => e
                 # If there's no cache, then there's nothing to complain about
               end
@@ -75,7 +77,7 @@ module Sweepy
 
           def _sweep_page(path, source)
             $STATS.sweep_pages_incr
-            puts "_sweep_page(#{path.inspect}, #{source})"
+            Sweepy.log "_sweep_page(#{path.inspect}, #{source})"
             base_dir = File.expand_path(Sweepy.config['sweeping']['pages']['base_dir'])
             path = File.expand_path(File.join(base_dir, path), base_dir)
             allowed = false
@@ -95,8 +97,13 @@ module Sweepy
               Sweepy.err "Security Warning: #{source} tried to remove out of path: #{path}"
             end
             if allowed
-              puts "(3)removing #{path}"
-              File.delete(path)
+              Sweepy.log "(3)removing #{path}"
+              begin
+                cache_file_name = page_cache_file(path) 
+                File.delete(cache_file_name) if File.exists? cache_file_name
+              rescue SystemCallError => e
+                # If there's no cache, then there's nothing to complain about
+              end
             else
               Sweepy.err "Security Warning: #{source} tried to remove #{path}"
             end
@@ -104,17 +111,29 @@ module Sweepy
           
           private
           
-            def search_dir(dir, &callback)
-              Dir.foreach(dir) do |d|
-                next if d == "." || d == ".."
-                name = File.join(dir, d)
-                if File.directory?(name)
-                  search_dir(name, &callback)
-                else
-                  callback.call name
-                end
+          def fragment_real_file_path(name)
+            '%s/%s.cache' % [@cache_path, name.gsub('?', '.').gsub(':', '.')]
+          end
+
+          
+          def search_dir(dir, &callback)
+            Dir.foreach(dir) do |d|
+              next if d == "." || d == ".."
+              name = File.join(dir, d)
+              if File.directory?(name)
+                search_dir(name, &callback)
+              else
+                callback.call name
               end
             end
+          end
+        
+          def page_cache_file(path)
+            name = (path.empty? || path == "/") ? "/index" : URI.unescape(path.chomp('/'))
+            name << '.html' unless (name.split('/').last || name).include? '.'
+            return name
+          end
+
     
         end
   

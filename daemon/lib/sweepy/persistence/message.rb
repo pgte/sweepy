@@ -29,7 +29,7 @@ module Sweepy
       end
 
       def put(key, value)
-        puts "put(#{key}, #{value})"
+        #Sweepy.log "Persistence layer: put(#{key}, #{value})"
         @db.put(key, value) || _handle_db_error 
       end
       

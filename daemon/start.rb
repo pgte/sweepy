@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 
+environment = $ENVIRONMENT || 'development'
+
 $LOAD_PATH << File.join(File.expand_path(File.dirname(__FILE__)), 'lib')
 
 begin
@@ -47,7 +49,7 @@ Sweepy.log "Configuration:\n#{Sweepy.config.inspect}"
 if Sweepy.config['persistence']['persist']
   require 'sweepy/persistence/message'
   require 'sweepy/persistence/retry'
-  $PM = Sweepy::Persistence::Message.new('db.tch')
+  $PM = Sweepy::Persistence::Message.new(File.expand_path(File.join(File.expand_path(File.dirname(__FILE__)), 'database', "#{environment}.tch")))
   $PM.connect
 end
 
