@@ -1,4 +1,4 @@
-require 'lib/sweepy/messaging/base'
+require 'sweepy/messaging/base'
 
 module Sweepy
   module Messaging

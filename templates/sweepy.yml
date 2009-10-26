@@ -1,8 +1,7 @@
 development:
-  daemon:
-    private:
-      port: 10002
-production:
-  daemon:
-    private:
-      port: 10002
+    sweeping:
+      pages:
+       allowed_paths: [dev, dev/*]
+    persistence:
+      persist: true
+      peers: [192.168.1.100, 192.168.1.101]

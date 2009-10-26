@@ -9,13 +9,13 @@ module Sweepy
         @db_path = db_path
         @valid_get_errors = [TokyoCabinet::HDB::ESUCCESS, TokyoCabinet::HDB::ENOREC]
         @valid_delete_errors = [TokyoCabinet::HDB::ENOREC]
-        puts "DB path = #{db_path}"
+        Sweepy.log "Persistence layer:DB path = #{db_path}"
       end
       
       def connect
         @db = HDB.new()
         _handle_db_error if !@db.open(@db_path, HDB::OWRITER | HDB::OCREAT)
-        puts "connected"
+        Sweepy.log "Persistence layer: connected"
       end
       
       def disconnect

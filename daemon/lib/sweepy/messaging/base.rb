@@ -2,7 +2,7 @@ require 'rubygems'
 require 'eventmachine'
 require 'socket'
 
-require 'lib/sweepy/protocol/listener'
+require 'sweepy/protocol/listener'
 
 module Sweepy
   module Messaging
@@ -16,15 +16,14 @@ module Sweepy
       end
       
       def register_for_command(command, listener)
-        puts "#{listener.class} registred for \"#{command}\" command"
+        Sweepy.log "#{listener.class} registred for \"#{command}\" command"
         @command_listeners[command] = listener
       end      
 
       def receive_line line
         begin
-          p "line: #{line}"
           port, ip = Socket.unpack_sockaddr_in(get_peername)
-          p "from #{ip}"
+          Sweepy.log "#{ip} >> #{line}"
 
           tokens = line.split(" ")
           command = tokens.first
@@ -38,7 +37,7 @@ module Sweepy
           #close_connection if data =~ /quit/i
         rescue => exception
           send_data "ERROR: #{exception.message}\n"
-          $stderr.puts "Error processing protocol line: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}\n"
+          Sweepy.err "Error processing protocol line: #{exception.message}\nBacktrace:\n#{exception.backtrace.join("\n")}\n"
         end
       end
       
@@ -58,25 +57,26 @@ module Sweepy
           port = Integer(port)
           sock.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true) if port == Sweepy.config['servers']['broadcast']['port'] 
           sock.send(data, 0, to, port)
-          puts "_send_datagram(#{data}, #{to}, #{port})"
+          Sweepy.log "_send_datagram(#{data}, #{to}, #{port})"
         ensure
           sock.close if sock
         end
       end
       
       def register_listeners(base_path, module_name)
-         puts "Checking for listeners on #{base_path}"
-         Dir["#{base_path}/*.rb"].each do |listener_file|
-           puts "Registering #{listener_file}"
+         path = File.join(File.expand_path(File.join(File.dirname(__FILE__),'..', '..' )), base_path)
+         Sweepy.log "Checking for listeners on #{path}"
+         Dir["#{path}/*.rb"].each do |listener_file|
+           Sweepy.log "Registering #{listener_file}"
           listener_file.gsub!(/\.rb$/, '')
-          puts "registering #{listener_file}"
+          Sweepy.log "registering #{listener_file}"
           require listener_file
           listener_class_name = listener_file.split("/").last.capitalize
           begin
             listener = eval "#{module_name}::#{listener_class_name}.new(self)"
             listener.register(self)
           rescue => exc
-            puts "Error registering listener from #{listener_file}: #{exc.to_s}\nBacktrace:\n#{exc.backtrace.join("\n")}"
+            Sweepy.err "Error registering listener from #{listener_file}: #{exc.to_s}\nBacktrace:\n#{exc.backtrace.join("\n")}"
           end
         end
 

@@ -1,11 +1,11 @@
-require 'lib/sweepy/messaging/base'
+require 'sweepy/messaging/base'
 
 module Sweepy
   module Messaging
     class Public < Sweepy::Messaging::Base
       
       def sweepy_post_init
-        register_listeners('lib/sweepy/protocol/public/listeners', 'Sweepy::Protocol::Public::Listeners')
+        register_listeners('sweepy/protocol/public/listeners', 'Sweepy::Protocol::Public::Listeners')
         
         if !defined?(@@retrier) && Sweepy.config['persistence']['persist']
           @@retrier = Sweepy::Persistence::Retry.new(self) 

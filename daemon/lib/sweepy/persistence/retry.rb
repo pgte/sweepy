@@ -1,4 +1,4 @@
-require 'lib/sweepy/protocol/listener'
+require 'sweepy/protocol/listener'
 
 
 module Sweepy
@@ -18,7 +18,7 @@ module Sweepy
         nounce, dest = key.split('-')
         unless Sweepy.config['persistence']['peers'].include? dest
           # IP address is no longer
-          puts "Peer \"#{dest}\" no longer here. Deleting it" 
+          Sweepy.log "Peer \"#{dest}\" no longer here. Deleting it" 
           $PM.delete(key)
         else
           message = $PM.get(key)
@@ -27,12 +27,12 @@ module Sweepy
             timestamp = message[0].to_i
             if timestamp + Sweepy.config['persistence']['timeout_secs'] < Time.now.utc.to_i
               # message has expired. delete it
-              puts "Message \"#{key}\" expired. Deleting it" 
+              Sweepy.log "Message \"#{key}\" expired. Deleting it" 
               $PM.delete(key)
             else
               #resend message
               command = message[1..-1].join(' ')
-              puts "retrying to send \"#{command}\" to #{dest}"   
+              Sweepy.log "retrying to send \"#{command}\" to #{dest}"   
               send_to(dest, command)
             end
           end

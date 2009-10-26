@@ -9,7 +9,7 @@ module Sweepy
           end
       
           def command(arguments, source_ip)
-            puts "PONG command received from #{source_ip}"
+            Sweepy.log "PONG command received from #{source_ip}"
           end
     
         end

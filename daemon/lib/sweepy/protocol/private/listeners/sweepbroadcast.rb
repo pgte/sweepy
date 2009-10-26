@@ -12,7 +12,7 @@ module Sweepy
       
           def command(arguments, source)
             $STATS.sweep_broadcasts_incr
-            puts "SWEEPBROADCAST command received from #{source}"
+            Sweepy.log "SWEEPBROADCAST command received from #{source}"
             _sweepbroadcast(arguments)
           end
           

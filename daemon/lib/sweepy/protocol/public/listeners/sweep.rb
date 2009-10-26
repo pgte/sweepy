@@ -1,4 +1,4 @@
-require 'lib/sweepy/protocol/broadcast/listeners/sweep'
+require 'sweepy/protocol/broadcast/listeners/sweep'
 module Sweepy
   module Protocol
     module Public

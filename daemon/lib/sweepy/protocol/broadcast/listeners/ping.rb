@@ -9,7 +9,7 @@ module Sweepy
           end
       
           def command(arguments, source_ip)
-            puts "PING command received from #{source_ip}"
+            Sweepy.log "PING command received from #{source_ip}"
             #send_to source_ip, "PONG"
             send_to '127.0.0.1', "PONG"
           end

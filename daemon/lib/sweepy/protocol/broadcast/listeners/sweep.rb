@@ -10,7 +10,7 @@ module Sweepy
       
           def command(arguments, source)
             $STATS.sweeps_incr
-            puts "SWEEP command received from #{source}"
+            Sweepy.log "SWEEP command received from #{source}"
             nonce = arguments[0]
             begin
               type = arguments[1]
@@ -41,15 +41,14 @@ module Sweepy
 
           def _sweep_fragment_regexp(path, regexp_options, source)
             $STATS.sweep_fragments_incr
-            puts "_sweep_fragment_regexp(#{path.inspect}, #{regexp_options.inspect}, #{source})"
+            Sweepy.log "_sweep_fragment_regexp(#{path.inspect}, #{regexp_options.inspect}, #{source})"
             base_dir = File.expand_path(Sweepy.config['sweeping']['fragments']['base_dir'])
-            puts "base_dir: #{base_dir}"
+            Sweepy.log "base_dir: #{base_dir}"
             matcher = Regexp.new(path, regexp_options)
-            puts "regexp = #{matcher.inspect}"
+            Sweepy.log "regexp = #{matcher.inspect}"
             search_dir(base_dir) do |f|
               if f =~ matcher
                 begin
-                  puts "(1)removing #{path}"
                   File.delete(f)
                 rescue SystemCallError => e
                   # If there's no cache, then there's nothing to complain about
@@ -60,18 +59,17 @@ module Sweepy
 
           def _sweep_fragment(path, source)
             $STATS.sweep_fragments_incr
-            puts "_sweep_fragment(#{path.inspect}, #{source})"
+            Sweepy.log "_sweep_fragment(#{path.inspect}, #{source})"
             base_dir = File.expand_path(Sweepy.config['sweeping']['fragments']['base_dir'])
             path = File.expand_path(File.join(base_dir, path), base_dir)
             if (path =~ /#{base_dir}/) == 0
-              puts "(2)removing #{path}"
               begin
                 File.delete(path) if File              
               rescue SystemCallError => e
                 # If there's no cache, then there's nothing to complain about
               end
             else
-              puts "Security Warning: #{source} tried to remove out of path: #{path}"
+              Sweepy.err "Security Warning: #{source} tried to remove out of path: #{path}"
             end
           end
 
@@ -94,13 +92,13 @@ module Sweepy
               end
               
             else
-              puts "Security Warning: #{source} tried to remove out of path: #{path}"
+              Sweepy.err "Security Warning: #{source} tried to remove out of path: #{path}"
             end
             if allowed
               puts "(3)removing #{path}"
               File.delete(path)
             else
-              puts "Security Warning: #{source} tried to remove #{path}"
+              Sweepy.err "Security Warning: #{source} tried to remove #{path}"
             end
           end
           
