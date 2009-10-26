@@ -78,5 +78,5 @@ EM.run {
 }
 ensure
   puts "closing the DM"
-  $PM.disconnect
+  $PM.disconnect if defined? $PM
 end
