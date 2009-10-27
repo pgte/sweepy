@@ -30,7 +30,12 @@ Choice.options do
   
 end
 
-require 'eventmachine'
+begin
+  require 'eventmachine'
+rescue LoadError
+  $stderr.puts "\"eventmachine\" gem not detected. Please install it using\n\tsudo gem install eventmachine"
+  exit
+end
 
 require 'sweepy/logger'
 require 'sweepy/config/config'
