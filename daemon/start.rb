@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 
-environment = $ENVIRONMENT || 'development'
+environment = ENV['RAILS_ENV'] || 'development'
+
+puts "starting #{environment} environment..."
 
 $LOAD_PATH << File.join(File.expand_path(File.dirname(__FILE__)), 'lib')
 
