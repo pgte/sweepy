@@ -1,16 +1,14 @@
-# Install
+# Distributed file cache expiration in Rails
 
-## Dependencies
+Sweepy allows you to expire file-based cache (page cache and fragment cache) on Rails on multiple boxes.
 
-$ sudo gem install eventmachine
+If you don’t want or don’t need to setup memcached, and just want to simply use Rails page and / or fragment caching, sweepy automatically handles page expiration.
 
-# How sweepy works
+## Contents
 
-Commands:
-
-
-PING <NONCE>
-PONG <NONCE> - responce to PONG
-DISTRIBUTE_SWEEP <paths_separated_by_:>
-SWEEP <NONCE> <paths_separated_by_:>
-SWEPT <NONCE> responce to sweep
+* [Install](http://wiki.github.com/pgte/sweepy/install)
+* [Configure](http://wiki.github.com/pgte/sweepy/configure)
+* [Start Daemon](http://wiki.github.com/pgte/sweepy/start-daemon)
+* [Admin](http://wiki.github.com/pgte/sweepy/admin)
+* [Protocol](http://wiki.github.com/pgte/sweepy/protocol)
+* [Command Syntax](http://wiki.github.com/pgte/sweepy/command-syntax)
