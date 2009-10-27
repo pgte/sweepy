@@ -15,7 +15,7 @@ module Sweepy
     module ClassMethods
 
       def expire_page_with_sweepy(path)
-        logger.debug("SWEEPY: expire_page_with_sweepy(#{path})")
+        #logger.debug("SWEEPY: expire_page_with_sweepy(#{path})")
         Sweepy::Commander.sweep_page_broadcast(path)
 
         #action controller not calling old expire methods now. everything should be handled by daemon.

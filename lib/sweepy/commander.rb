@@ -5,10 +5,20 @@ module Sweepy
   class Commander
     
     def self.sweep_page_broadcast(path)
-      if(Sweepy::Config.config['persistence']['persist'])
-        _send_command "SWEEPBROADCAST PAGE #{path}"
+      if path.is_a?(Regexp)
+        command = "PAGE_REGEXP #{path.options.to_s} #{path.source}"
+        if(Sweepy::Config.config['persistence']['persist'])
+          _send_command "SWEEPBROADCAST #{command}"
+        else
+          _send_command "SWEEP #{_nonce} #{command}", true
+        end
       else
-        _send_command "SWEEP #{_nonce} PAGE #{path}", true
+        command = "PAGE_STRING #{path}"
+        if(Sweepy::Config.config['persistence']['persist'])
+          _send_command "SWEEPBROADCAST #{command}"
+        else
+          _send_command "SWEEP #{_nonce} #{command}", true
+        end
       end
     end
 
@@ -25,7 +35,7 @@ module Sweepy
         if(Sweepy::Config.config['persistence']['persist'])
           _send_command "SWEEPBROADCAST #{command}"
         else
-          _send_command "SWEEP #{_nonce} #{command}"
+          _send_command "SWEEP #{_nonce} #{command}", true
         end
       end
     end

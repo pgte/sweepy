@@ -23,7 +23,7 @@ module Sweepy
       def receive_line line
         begin
           port, ip = Socket.unpack_sockaddr_in(get_peername)
-          if Sweepy.config['persistence']['peers'].count > 0 && !Sweepy.config['persistence']['peers'].include?(ip)
+          if ip != '127.0.0.1' and Sweepy.config['persistence']['peers'].count > 0 && !Sweepy.config['persistence']['peers'].include?(ip)
             Sweepy.err "Security warning: received command from #{ip}. Ignoring it."
             send_data "Forbidden\nGoodbye\n"
             close_connection_after_writing

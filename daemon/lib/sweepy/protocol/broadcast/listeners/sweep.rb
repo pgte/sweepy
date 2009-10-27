@@ -18,13 +18,15 @@ module Sweepy
               type = arguments[1]
               path_start_on_index = 2
               regexp_options = nil
-              if type == 'FRAGMENT_REGEXP'
+              if ['FRAGMENT_REGEXP', 'PAGE_REGEXP'].include? type 
                 regexp_options = Integer(arguments[2])
                 path_start_on_index = 3
               end
               arguments[path_start_on_index..-1].each do |path|
                 case type
-                  when 'PAGE'
+                  when 'PAGE_REGEXP'
+                    _sweep_page_regexp(path, regexp_options, source)
+                  when 'PAGE_STRING'
                     _sweep_page(path, source)
                   when 'FRAGMENT_REGEXP'
                     _sweep_fragment_regexp(path, regexp_options, source)
@@ -75,6 +77,35 @@ module Sweepy
             end
           end
 
+          def _sweep_page_regexp(path, source, regexp_options)
+            Sweepy.log "_sweep_page_regexp(#{path.inspect}, #{source}, #{regexp_options.to_s})"
+            base_dir = File.expand_path(Sweepy.config['sweeping']['pages']['base_dir'])
+            matcher = Regexp.new(path, regexp_options)
+            search_dir(base_dir) do |f|
+              if f =~ matcher
+                allowed = true
+                if allowed_paths = Sweepy.config['sweeping']['pages']['allowed_paths']
+                  allowed = false
+                  allowed_paths.each do |allowed_path|
+                    if File.fnmatch(File.join(base_dir, allowed_path), f)
+                      allowed = true
+                      break
+                    end
+                  end
+                end
+                if allowed
+                  begin
+                    File.delete(f)
+                  rescue SystemCallError => e
+                    # If there's no cache, then there's nothing to complain about
+                  end
+                else
+                  Sweepy.err "Security Warning: #{source} tried to remove #{path.inspect}"
+                end
+              end
+            end
+          end
+          
           def _sweep_page(path, source)
             $STATS.sweep_pages_incr
             Sweepy.log "_sweep_page(#{path.inspect}, #{source})"
