@@ -77,7 +77,7 @@ module Sweepy
             end
           end
 
-          def _sweep_page_regexp(path, source, regexp_options)
+          def _sweep_page_regexp(path, regexp_options, source)
             Sweepy.log "_sweep_page_regexp(#{path.inspect}, #{source}, #{regexp_options.to_s})"
             base_dir = File.expand_path(Sweepy.config['sweeping']['pages']['base_dir'])
             matcher = Regexp.new(path, regexp_options)
