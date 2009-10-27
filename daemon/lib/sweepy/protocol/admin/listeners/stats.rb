@@ -9,8 +9,7 @@ module Sweepy
           end
       
           def command(arguments, source)
-            send_data "\nSWEEPBROADCASTS: #{$STATS.sweep_broadcasts}\nSWEEPS: #{$STATS.sweeps}\nSWEEP_PAGES: #{$STATS.sweep_pages}\nSWEEP_FRAGMENTS: #{$STATS.sweep_fragments}\nSWEPTS: #{$STATS.swepts}\n\n"
-            close_connection_after_writing
+            send_data "SWEEPBROADCASTS: #{$STATS.sweep_broadcasts}\nSWEEPS: #{$STATS.sweeps}\nSWEEP_PAGES: #{$STATS.sweep_pages}\nSWEEP_FRAGMENTS: #{$STATS.sweep_fragments}\nSWEPTS: #{$STATS.swepts}\n"
           end
     
         end

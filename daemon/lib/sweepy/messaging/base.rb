@@ -17,17 +17,23 @@ module Sweepy
       
       def register_for_command(command, listener)
         Sweepy.log "#{listener.class} registred for \"#{command}\" command"
-        @command_listeners[command] = listener
+        @command_listeners[command.downcase] = listener
       end      
 
       def receive_line line
         begin
           port, ip = Socket.unpack_sockaddr_in(get_peername)
+          if Sweepy.config['persistence']['peers'].count > 0 && !Sweepy.config['persistence']['peers'].include?(ip)
+            Sweepy.err "Security warning: received command from #{ip}. Ignoring it."
+            send_data "Forbidden\nGoodbye\n"
+            close_connection_after_writing
+            return
+          end
           Sweepy.log "#{ip} >> #{line}"
 
           tokens = line.split(" ")
           command = tokens.first
-          if listener = @command_listeners[command]
+          if listener = @command_listeners[command.downcase]
             listener.command(tokens[1..-1], ip)
           else
             raise "No listener found for command \"#{command}\""

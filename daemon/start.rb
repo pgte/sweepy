@@ -22,7 +22,13 @@ Choice.options do
     long '--verbose'
     desc 'Turn on verbose output messages'
   end
-  
+
+  option :admin do
+    long '--admin'
+    default true
+    desc 'Turn on admin interface'
+  end
+
   option :help do
     long '--help'
     desc 'Show this message'
@@ -51,6 +57,7 @@ Sweepy.log "Configuration:\n#{Sweepy.config.inspect}"
 
 ## Start persistence
 
+$PM = nil
 if Sweepy.config['persistence']['persist']
   require 'sweepy/persistence/message'
   require 'sweepy/persistence/retry'
@@ -74,14 +81,19 @@ EM.run {
     EM.open_datagram_socket Sweepy.config['servers']['broadcast']['bind_address'], Sweepy.config['servers']['broadcast']['port'], Sweepy::Messaging::Broadcast
     Sweepy.log "Starting private server on port #{Sweepy.config['servers']['private']['port']}"
     EM.open_datagram_socket '127.0.0.1', Sweepy.config['servers']['private']['port'], Sweepy::Messaging::Private
-    Sweepy.log "Starting admin server"    
-    EM.start_server Sweepy.config['servers']['admin']['bind_address'], Sweepy.config['servers']['admin']['port'], Sweepy::Messaging::Admin
+    if Choice.choices.admin
+      Sweepy.log "Starting admin server"    
+      EM.start_server Sweepy.config['servers']['admin']['bind_address'], Sweepy.config['servers']['admin']['port'], Sweepy::Messaging::Admin
+    end
   rescue => exc
     Sweepy.err "Error starting services: #{exc.message}\nBacktrace:\n#{exc.backtrace.join("\n")}"
     exit
   end
 }
+rescue Interrupt
+  Sweepy.log 'Closing...'
 ensure
   puts "closing the DM"
-  $PM.disconnect if defined? $PM
+  $PM.disconnect unless $PM.nil? 
 end
+  Sweepy.log 'Closed.'
