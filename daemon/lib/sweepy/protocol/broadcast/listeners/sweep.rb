@@ -1,4 +1,5 @@
 require 'uri'
+require 'fileutils'
 
 module Sweepy
   module Protocol
@@ -53,7 +54,7 @@ module Sweepy
             search_dir(base_dir) do |f|
               if f =~ matcher
                 begin
-                  File.delete(f)
+                  FileUtil.rm_rf(f)
                 rescue SystemCallError => e
                   # If there's no cache, then there's nothing to complain about
                 end
@@ -95,7 +96,7 @@ module Sweepy
                 end
                 if allowed
                   begin
-                    File.delete(f)
+                    FileUtil.rm_rf(f)
                   rescue SystemCallError => e
                     # If there's no cache, then there's nothing to complain about
                   end
