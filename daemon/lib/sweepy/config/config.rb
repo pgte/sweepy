@@ -6,7 +6,7 @@ module Sweepy
   end
   
   def self.config
-    environment = $ENVIRONMENT || 'development'
+    environment = ENV['RAILS_ENV'] || 'development'
     return @@config if defined? @@config
     
     base_dir = File.expand_path(File.join(File.expand_path(File.dirname(__FILE__)), '..', '..', '..', '..', '..', '..', '..'))
